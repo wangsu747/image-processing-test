@@ -8,7 +8,7 @@ from torch.utils.tensorboard import SummaryWriter
 from torchvision import transforms
 import torch.optim.lr_scheduler as lr_scheduler
 
-from model import shufflenet_v2_x1_0
+from model import shufflenet_v2_x1_0 # 更改模型
 from my_dataset import MyDataSet
 from utils import read_split_data, train_one_epoch, evaluate
 

@@ -164,7 +164,7 @@ def shufflenet_v2_x0_5(num_classes=1000):
 
     return model
 
-
+# 各种模型
 def shufflenet_v2_x1_0(num_classes=1000):
     """
     Constructs a ShuffleNetV2 with 1.0x output channels, as described in

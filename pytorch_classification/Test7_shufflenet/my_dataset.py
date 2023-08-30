@@ -17,7 +17,9 @@ class MyDataSet(Dataset):
     def __getitem__(self, item):
         img = Image.open(self.images_path[item])
         # RGB为彩色图片，L为灰度图片
+        img = img.convert('RGB')
         print('img.mode = {}'.format(img.mode))
+
         if img.mode != 'RGB':
             raise ValueError("image: {} isn't RGB mode.".format(self.images_path[item]))
         label = self.images_class[item]

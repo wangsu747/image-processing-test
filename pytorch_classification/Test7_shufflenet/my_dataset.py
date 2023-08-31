@@ -25,7 +25,7 @@ class MyDataSet(Dataset):
         label = self.images_class[item]
 
         if self.transform is not None:
-            print('transform : {}'.format(self.transform))
+            # print('transform : {}'.format(self.transform))
             img = self.transform(img)
 
 

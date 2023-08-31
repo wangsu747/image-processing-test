@@ -97,7 +97,7 @@ class ShuffleNetV2(nn.Module):
         self._stage_out_channels = stages_out_channels
 
         # input RGB image
-        input_channels = 3
+        input_channels = 1
         output_channels = self._stage_out_channels[0]
 
         self.conv1 = nn.Sequential(

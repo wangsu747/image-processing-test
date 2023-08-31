@@ -25,7 +25,7 @@ class MyDataSet(Dataset):
         label = self.images_class[item]
 
         if self.transform is not None:
-            img = self.transform(img)
+            img = self.transforms.Grayscale(num_output_channels=1)
 
         return img, label
 

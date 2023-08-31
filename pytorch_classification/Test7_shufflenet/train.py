@@ -29,12 +29,13 @@ def main(args):
                                      transforms.RandomHorizontalFlip(),
                                      transforms.Grayscale(num_output_channels=1),
                                      transforms.ToTensor(),
-                                     transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])]),
+                                     # transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])]),
+                                     transforms.Normalize([0.485,], [0.229,])]),
         "val": transforms.Compose([transforms.Resize(256),
                                    transforms.CenterCrop(224),
                                    transforms.Grayscale(num_output_channels=1),
                                    transforms.ToTensor(),
-                                   transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])])}
+                                   transforms.Normalize([0.485,], [0.229,])])}
 
     # 实例化训练数据集
     train_dataset = MyDataSet(images_path=train_images_path,

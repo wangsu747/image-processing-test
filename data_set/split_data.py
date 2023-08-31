@@ -20,7 +20,7 @@ def main():
     # 指向你解压后的flower_photos文件夹
     cwd = os.getcwd()
     data_root = os.path.join(cwd, "train_data")
-    origin_flower_path = os.path.join(data_root, "IoT_photos")
+    origin_flower_path = os.path.join(data_root, "IoT_photos_L")
     assert os.path.exists(origin_flower_path), "path '{}' does not exist.".format(origin_flower_path)
 
     flower_class = [cla for cla in os.listdir(origin_flower_path)

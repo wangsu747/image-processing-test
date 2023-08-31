@@ -1,7 +1,7 @@
 from PIL import Image
 import torch
 from torch.utils.data import Dataset
-from torchvision import transforms
+# from torchvision import transforms
 
 class MyDataSet(Dataset):
     """自定义数据集"""
@@ -25,7 +25,7 @@ class MyDataSet(Dataset):
         label = self.images_class[item]
 
         if self.transform is not None:
-            print('transform : {}'.format(transforms))
+            # print('transform : {}'.format(self.transforms))
             img = self.transforms(img)
 
         return img, label

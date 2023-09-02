@@ -34,6 +34,7 @@ def main(args):
 
     # 加载类别,label标签,一行一个
     class_labels = []
+
     with open("label.txt", "r") as f:
         class_labels = [line.strip() for line in f.readlines()]
     print('class_label = {}'.format(class_labels))

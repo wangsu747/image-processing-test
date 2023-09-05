@@ -90,7 +90,7 @@ class ResNet(nn.Module):
     def __init__(self,
                  block,
                  blocks_num,
-                 num_classes=1000,
+                 num_classes=25, #原本是1000
                  include_top=True,
                  groups=1,
                  width_per_group=64):
@@ -161,12 +161,13 @@ class ResNet(nn.Module):
         return x
 
 
-def resnet34(num_classes=1000, include_top=True):
+# 原本class都是1000
+def resnet34(num_classes=25, include_top=True):
     # https://download.pytorch.org/models/resnet34-333f7ec4.pth
     return ResNet(BasicBlock, [3, 4, 6, 3], num_classes=num_classes, include_top=include_top)
 
 
-def resnet50(num_classes=1000, include_top=True):
+def resnet50(num_classes=25, include_top=True):
     # https://download.pytorch.org/models/resnet50-19c8e357.pth
     return ResNet(Bottleneck, [3, 4, 6, 3], num_classes=num_classes, include_top=include_top)
 

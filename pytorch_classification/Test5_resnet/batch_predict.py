@@ -4,11 +4,11 @@ import json
 import torch
 from PIL import Image
 from torchvision import transforms
-
+import argparse
 from model import resnet34
 
 
-def main():
+def main(args):
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
     data_transform = transforms.Compose(
@@ -17,9 +17,16 @@ def main():
          transforms.ToTensor(),
          transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])])
 
+    # 加载类别,label标签,一行一个
+    with open("label.txt", "r") as f:
+        class_labels = [line.strip() for line in f.readlines()]
+    print('class_label = {}'.format(class_labels))
+
+
     # load image
     # 指向需要遍历预测的图像文件夹
-    imgs_root = "/data/imgs"
+    imgs_root = args.data_path
+    print('img_path_list : {}'.format(imgs_root))
     assert os.path.exists(imgs_root), f"file: '{imgs_root}' dose not exist."
     # 读取指定文件夹下所有jpg图像路径
     img_path_list = [os.path.join(imgs_root, i) for i in os.listdir(imgs_root) if i.endswith(".jpg")]
@@ -32,10 +39,10 @@ def main():
     class_indict = json.load(json_file)
 
     # create model
-    model = resnet34(num_classes=5).to(device)
+    model = resnet34(num_classes=25).to(device)
 
     # load model weights
-    weights_path = "./resNet34.pth"
+    weights_path = args.weights
     assert os.path.exists(weights_path), f"file: '{weights_path}' dose not exist."
     model.load_state_dict(torch.load(weights_path, map_location=device))
 
@@ -57,8 +64,9 @@ def main():
             # predict class
             output = model(batch_img.to(device)).cpu()
             predict = torch.softmax(output, dim=1)
-            probs, classes = torch.max(predict, dim=1)
 
+            probs, classes = torch.max(predict, dim=1)
+            print('probs = {}'.format(probs))
             for idx, (pro, cla) in enumerate(zip(probs, classes)):
                 print("image: {}  class: {}  prob: {:.3}".format(img_path_list[ids * batch_size + idx],
                                                                  class_indict[str(cla.numpy())],
@@ -66,4 +74,11 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--data-path', type=str,
+                        default="/data/flower_photos")
+    parser.add_argument('--weights', type=str, default='',
+                        help='initial weights path')
+
+    opt = parser.parse_args()
+    main(opt)

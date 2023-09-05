@@ -36,7 +36,7 @@ def main():
         class_indict = json.load(f)
 
     # create model
-    model = resnet34(num_classes=5).to(device)
+    model = resnet34(num_classes=25).to(device)
 
     # load model weights
     weights_path = "./resNet34.pth"

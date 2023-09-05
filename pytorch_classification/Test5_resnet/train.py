@@ -61,8 +61,8 @@ def main(args):
     net = resnet34()
     # load pretrain weights
     # download url: https://download.pytorch.org/models/resnet34-333f7ec4.pth
-    model_weight_path = "./resnet34-pre.pth"
-
+    # model_weight_path = "./resnet34-pre.pth"
+    model_weight_path = args.weights
     assert os.path.exists(model_weight_path), "file {} does not exist.".format(model_weight_path)
     net.load_state_dict(torch.load(model_weight_path, map_location='cpu'))
     # for param in net.parameters():
@@ -114,6 +114,8 @@ def main(args):
                 outputs = net(val_images.to(device))
                 # loss = loss_function(outputs, test_labels)
                 predict_y = torch.max(outputs, dim=1)[1]
+                print('predict_y no [1] = {}'.format(torch.max(outputs, dim=1)))
+                print('predict_y = {}'.format(predict_y))
                 acc += torch.eq(predict_y, val_labels.to(device)).sum().item()
 
                 val_bar.desc = "valid epoch[{}/{}]".format(epoch + 1,
@@ -122,10 +124,11 @@ def main(args):
         val_accurate = acc / val_num
         print('[epoch %d] train_loss: %.3f  val_accuracy: %.3f' %
               (epoch + 1, running_loss / train_steps, val_accurate))
-
+        print('val_accurate > best_acc : {}'.format(val_accurate > best_acc))
         if val_accurate > best_acc:
             best_acc = val_accurate
-            torch.save(net.state_dict(), save_path)
+            # torch.save(net.state_dict(), save_path)
+            torch.save(net.state_dict(), './resNet34-{}.pth'.format(epoch+1))
 
     print('Finished Training')
 

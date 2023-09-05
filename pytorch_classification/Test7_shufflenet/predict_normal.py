@@ -59,7 +59,7 @@ def main(args):
             output = torch.squeeze(model(img.to(device))).cpu()
             predict = torch.softmax(output, dim=0)
             predict_cla = torch.argmax(predict).numpy()
-            # print('predict_cla = {}'.format(type(predict_cla)))
+            print('predict_cla = {}'.format(predict_cla))
             # print('class_labels[i] = {}'.format(type(class_labels[i])))
             # print('equal or not = {}'.format(str(predict_cla) == class_labels[i]))
             if str(predict_cla) == class_labels[i]:

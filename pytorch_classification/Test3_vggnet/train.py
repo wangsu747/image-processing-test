@@ -7,11 +7,11 @@ import torch.nn as nn
 from torchvision import transforms, datasets
 import torch.optim as optim
 from tqdm import tqdm
-
+import argparse
 from model import vgg
 
 
-def main():
+def main(args):
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print("using {} device.".format(device))
 
@@ -24,9 +24,11 @@ def main():
                                    transforms.ToTensor(),
                                    transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])}
 
+    # 另一种获取数据集的方式
     data_root = os.path.abspath(os.path.join(os.getcwd(), "../.."))  # get data root path
-    image_path = os.path.join(data_root, "data_set", "flower_data")  # flower data set path
+    image_path = os.path.join(data_root, "data_set", "train_data")  # flower data set path
     assert os.path.exists(image_path), "{} path does not exist.".format(image_path)
+
     train_dataset = datasets.ImageFolder(root=os.path.join(image_path, "train"),
                                          transform=data_transform["train"])
     train_num = len(train_dataset)
@@ -39,7 +41,7 @@ def main():
     with open('class_indices.json', 'w') as json_file:
         json_file.write(json_str)
 
-    batch_size = 32
+    batch_size = args.batch_size
     nw = min([os.cpu_count(), batch_size if batch_size > 1 else 0, 8])  # number of workers
     print('Using {} dataloader workers every process'.format(nw))
 
@@ -60,12 +62,12 @@ def main():
     # test_image, test_label = test_data_iter.next()
 
     model_name = "vgg16"
-    net = vgg(model_name=model_name, num_classes=5, init_weights=True)
+    net = vgg(model_name=model_name, num_classes=25, init_weights=True)
     net.to(device)
     loss_function = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(net.parameters(), lr=0.0001)
+    optimizer = optim.Adam(net.parameters(), lr=args.lr) # lr=0.0001
 
-    epochs = 30
+    epochs = args.epochs
     best_acc = 0.0
     save_path = './{}Net.pth'.format(model_name)
     train_steps = len(train_loader)
@@ -112,4 +114,27 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser()
+    # parser.add_argument('--num_classes', type=int, default=25)
+    parser.add_argument('--epochs', type=int, default=30)
+    parser.add_argument('--batch-size', type=int, default=2)
+    parser.add_argument('--lr', type=float, default=0.01)
+    # parser.add_argument('--lrf', type=float, default=0.1)
+
+    # 数据集所在根目录
+    # https://storage.googleapis.com/download.tensorflow.org/example_images/flower_photos.tgz
+    parser.add_argument('--data-path', type=str,
+                        default="/data/flower_photos")
+
+    # shufflenetv2_x1.0 官方权重下载地址
+    # https://download.pytorch.org/models/shufflenetv2_x1-5666bf0f80.pth
+    # parser.add_argument('--weights', type=str, default='./shufflenetv2_x1.pth',
+    #                     help='initial weights path')
+    parser.add_argument('--weights', type=str, default='',
+                        help='initial weights path')
+    parser.add_argument('--freeze-layers', type=bool, default=False)
+    parser.add_argument('--device', default='cuda:0', help='device id (i.e. 0 or 0,1 or cpu)')
+
+    opt = parser.parse_args()
+
+    main(opt)

@@ -17,7 +17,7 @@ def main():
     net.load_state_dict(torch.load(model_weight_path, map_location=device))
     # change fc layer structure
     in_channel = net.fc.in_features
-    net.fc = nn.Linear(in_channel, 5)
+    net.fc = nn.Linear(in_channel, 25)
 
     # option2
     # net = resnet34(num_classes=5)
